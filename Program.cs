@@ -34,6 +34,49 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.MapGet("/api/products", async (BangazonAPIDbContext db) =>
+    await db.Products.Include(p => p.Category).ToListAsync());
+
+app.MapGet("/api/products/{id}", async (BangazonAPIDbContext db, int id) =>
+{
+    var product = await db.Products.Include(p => p.Category).FirstOrDefaultAsync(p => p.Id == id);
+    return product != null ? Results.Ok(product) : Results.NotFound();
+});
+
+app.MapPost("/api/products", async (BangazonAPIDbContext db, Product product) =>
+{
+    db.Products.Add(product);
+    await db.SaveChangesAsync();
+    return Results.Created($"/api/products/{product.Id}", product);
+});
+
+app.MapPut("/api/products/{id}", async (BangazonAPIDbContext db, int id, Product updatedProduct) =>
+{
+    var product = await db.Products.FindAsync(id);
+
+    if (product == null) return Results.NotFound();
+
+    product.Name = updatedProduct.Name;
+    product.Description = updatedProduct.Description;
+    product.Price = updatedProduct.Price;
+    product.Quantity = updatedProduct.Quantity;
+    product.CategoryId = updatedProduct.CategoryId;
+
+    await db.SaveChangesAsync();
+    return Results.NoContent();
+});
+
+app.MapDelete("/api/products/{id}", async (BangazonAPIDbContext db, int id) =>
+{
+    var product = await db.Products.FindAsync(id);
+    if (product == null) return Results.NotFound();
+
+    db.Products.Remove(product);
+    await db.SaveChangesAsync();
+    return Results.NoContent();
+});
+
+
 
 
 app.Run();
