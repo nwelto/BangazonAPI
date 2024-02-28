@@ -37,7 +37,7 @@
 
             // Seed data for 'Orders'
             modelBuilder.Entity<Order>().HasData(
-                new Order { Id = 1, UserId = 2, Status = "Completed", Created = new DateTime(2024, 2, 24) }
+                new Order { Id = 1, UserId = 2, IsOpen = true, Created = new DateTime(2024, 2, 24) }
             );
 
             // Seed data for 'OrderProducts'

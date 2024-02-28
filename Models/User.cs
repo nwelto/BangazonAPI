@@ -21,7 +21,6 @@ public class User
 
     public bool IsSeller { get; set; }
 
-    // Navigation properties
     public virtual ICollection<Product> Products { get; set; }
     public virtual ICollection<Order> Orders { get; set; }
 }
