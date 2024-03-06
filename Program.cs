@@ -118,29 +118,7 @@ app.MapPost("/api/orders", (BangazonAPIDbContext db, OrderCreateDto orderDto) =>
     return Results.Created($"/api/orders/{order.Id}", order);
 });
 
-app.MapPut("/api/orders/{id}", (BangazonAPIDbContext db, int id, Order updatedOrder) =>
-{
-    var order = db.Orders.Find(id);
 
-    if (order == null) return Results.NotFound();
-
-    order.UserId = updatedOrder.UserId;
-    order.IsOpen = updatedOrder.IsOpen;
-
-    db.SaveChanges();
-
-    return Results.NoContent();
-});
-
-app.MapDelete("/api/orders/{id}", (BangazonAPIDbContext db, int id) =>
-{
-    var order = db.Orders.Find(id);
-    if (order == null) return Results.NotFound();
-
-    db.Orders.Remove(order);
-    db.SaveChanges();
-    return Results.NoContent();
-});
 
 
 app.MapGet("/api/categories", (BangazonAPIDbContext db) =>
@@ -168,31 +146,45 @@ app.MapGet("/api/categories/{id}", (BangazonAPIDbContext db, int id) =>
     return category != null ? Results.Ok(category) : Results.NotFound();
 });
 
-
-app.MapPut("/api/categories/{id}", (BangazonAPIDbContext db, int id, Category updatedCategory) =>
+app.MapPost("/api/users", (User user, BangazonAPIDbContext db) =>
 {
-    var existingCategory = db.Categories.Find(id);
-    if (existingCategory == null)
-        return Results.NotFound();
-
-    existingCategory.Name = updatedCategory.Name;
-
+    db.Users.Add(user);
     db.SaveChanges();
-    return Results.Ok(existingCategory);
+    return Results.Created($"/api/users/{user.Id}", user);
 });
 
-
-app.MapDelete("/api/categories/{id}", (BangazonAPIDbContext db, int id) =>
+app.MapGet("/api/users/{id}", (BangazonAPIDbContext db, int id) =>
 {
-    var categoryToDelete = db.Categories.Find(id);
-    if (categoryToDelete == null)
-        return Results.NotFound();
+    var user = db.Users.Find(id);
+    if (user == null) return Results.NotFound();
 
-    db.Categories.Remove(categoryToDelete);
+    return Results.Ok(user);
+});
+
+app.MapPut("/api/users/{id}", (BangazonAPIDbContext db, int id, User updatedUser) =>
+{
+    var user = db.Users.Find(id);
+    if (user == null) return Results.NotFound();
+
+    user.Username = updatedUser.Username;
+    user.Email = updatedUser.Email;
+    user.IsSeller = updatedUser.IsSeller;
+
     db.SaveChanges();
-
     return Results.NoContent();
 });
+
+
+app.MapDelete("/api/users/{id}", (BangazonAPIDbContext db, int id) =>
+{
+    var user = db.Users.Find(id);
+    if (user == null) return Results.NotFound();
+
+    db.Users.Remove(user);
+    db.SaveChanges();
+    return Results.NoContent();
+});
+
 
 
 app.Run();
