@@ -2,24 +2,22 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 
-namespace BangazonAPI.Models;
-
-public class Order
+namespace BangazonAPI.Models
 {
-    public int Id { get; set; }
+    public class Order
+    {
+        public int Id { get; set; }
+        public int UserId { get; set; }
+        public bool IsOpen { get; set; }
+        public DateTime Created { get; set; }
 
-    [ForeignKey("User")]
-    public int UserId { get; set; }
-    public User User { get; set; }
-
-    [Required]
-    [MaxLength(255)]
-    public string Status { get; set; }
-
-    [DataType(DataType.DateTime)]
-    public DateTime Created { get; set; }
-
-    public virtual ICollection<OrderProduct> OrderProducts { get; set; }
+        public User User { get; set; }
+        public ICollection<OrderProduct> OrderProducts { get; set; }
+    }
 }
+
+
+
 

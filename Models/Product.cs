@@ -8,7 +8,6 @@ public class Product
     public int Id { get; set; }
 
     [Required]
-    [MaxLength(255)]
     public string Name { get; set; }
 
     public string Description { get; set; } 
@@ -18,12 +17,11 @@ public class Product
 
     public int Quantity { get; set; }
 
-    [ForeignKey("User")]
-    public int SellerId { get; set; }
-    public User Seller { get; set; }
 
-    [ForeignKey("Category")]
+    public int SellerId { get; set; }
+    public User Seller { get; set; } 
+
     public int CategoryId { get; set; }
-    public Category Category { get; set; }
+    public Category Category { get; set; } 
 }
 
